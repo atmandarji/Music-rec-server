@@ -14,18 +14,37 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+const allowCrossDomain = function(req, res, next) {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://sad-franklin-408b9f.netlify.com/"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "ACL, CANCELUPLOAD, CHECKIN, CHECKOUT, COPY, DELETE, GET, HEAD, LOCK, MKCALENDAR, MKCOL, MOVE, OPTIONS, POST, PROPFIND, PROPPATCH, PUT, REPORT, SEARCH, UNCHECKOUT, UNLOCK, UPDATE, VERSION-CONTROL"
+  );
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    "authorization, Authentication, Overwrite, Destination, Content-Type, Depth, User-Agent, Translate, Range, Content-Range, Timeout, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Location, Lock-Token, If"
   );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
+  res.header("Access-Control-Expose-Headers", "DAV, content-length, Allow");
+  if ("OPTIONS" === req.method) {
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://sad-franklin-408b9f.netlify.com/"
+    );
+    res.header(
+      "Access-Control-Allow-Headers",
+      "authorization,Authentication, Overwrite, Destination, Content-Type, Depth, User-Agent, Translate, Range, Content-Range, Timeout, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Location, Lock-Token, If"
+    );
+
+    return res.sendStatus(200).end();
+  } else {
+    //move on
+    next();
   }
-  next();
-});
+};
 
 const userRouts = require("./api/routs/user");
 const searchRouts = require("./api/routs/search");
