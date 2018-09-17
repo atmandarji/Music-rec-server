@@ -8,6 +8,7 @@ const verifytoken = require("../middleware/verifytoken");
 const User = require("../models/user");
 const History = require("../models/history");
 router.post("/signup", (req, res, next) => {
+  console.log(req);
   User.find({ userid: req.body.authData.userid })
     .exec()
     .then(user => {
@@ -67,7 +68,7 @@ router.post("/signup", (req, res, next) => {
     });
 });
 router.post("/login", (req, res, next) => {
-  //console.log(req.body);
+  console.log(req.body);
   User.find({ userid: req.body.authData.userid })
     .exec()
     .then(user => {

@@ -8,44 +8,27 @@ mongoose.connect(
   "mongodb+srv://atman-darji:atman123@cluster0-dq7xd.mongodb.net/test?retryWrites=true",
   {
     useNewUrlParser: true
+  },
+  () => {
+    console.log("Successfully Connected");
   }
 );
+
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const allowCrossDomain = function(req, res, next) {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://sad-franklin-408b9f.netlify.com/"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "ACL, CANCELUPLOAD, CHECKIN, CHECKOUT, COPY, DELETE, GET, HEAD, LOCK, MKCALENDAR, MKCOL, MOVE, OPTIONS, POST, PROPFIND, PROPPATCH, PUT, REPORT, SEARCH, UNCHECKOUT, UNLOCK, UPDATE, VERSION-CONTROL"
-  );
-  res.header(
+app.use((req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Credentials", "true");
+  res.set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.set(
     "Access-Control-Allow-Headers",
-    "authorization, Authentication, Overwrite, Destination, Content-Type, Depth, User-Agent, Translate, Range, Content-Range, Timeout, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Location, Lock-Token, If"
+    "Origin, Accept, X-Requested-With, Content-Type, x-access-token, Authorization"
   );
-  res.header("Access-Control-Expose-Headers", "DAV, content-length, Allow");
-  if ("OPTIONS" === req.method) {
-    res.header(
-      "Access-Control-Allow-Origin",
-      "https://sad-franklin-408b9f.netlify.com/"
-    );
-    res.header(
-      "Access-Control-Allow-Headers",
-      "authorization,Authentication, Overwrite, Destination, Content-Type, Depth, User-Agent, Translate, Range, Content-Range, Timeout, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Location, Lock-Token, If"
-    );
-
-    return res.sendStatus(200).end();
-  } else {
-    //move on
-    next();
-  }
-};
-
+  res.set("Cache-Control", "no-cache");
+  next();
+});
 const userRouts = require("./api/routs/user");
 const searchRouts = require("./api/routs/search");
 const verifyRouts = require("./api/routs/verify");
