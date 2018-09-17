@@ -27,7 +27,17 @@ app.use((req, res, next) => {
     "Origin, Accept, X-Requested-With, Content-Type, x-access-token, Authorization"
   );
   res.set("Cache-Control", "no-cache");
-  next();
+  if ("OPTIONS" === req.method) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Authorization, Authentication, Overwrite, Destination, Content-Type, Depth, User-Agent, Translate, Range, Content-Range, Timeout, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Location, Lock-Token, If"
+    );
+
+    return res.sendStatus(200).end();
+  } else {
+    //move on
+    next();
+  }
 });
 const userRouts = require("./api/routs/user");
 const searchRouts = require("./api/routs/search");
