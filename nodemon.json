@@ -1,0 +1,7 @@
+{
+  "env": {
+    "JWT_KEY": "mykeyismykey",
+    "MONGO_ATLAS_PW": "atman123",
+    "API_KEY": "1ca2cf614eeaa185c2b61753b434b599"
+  }
+}
